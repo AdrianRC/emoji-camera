@@ -1,29 +1,21 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <h1
+      class="text-3xl font-semibold leading-9 text-center text-teal-400 font-display"
+    >
+      Emoji Camera
+    </h1>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
+import { defineComponent } from "@vue/composition-api";
 
-export default Vue.extend({
+export default defineComponent({
   name: "App",
-  components: {
-    HelloWorld
-  }
+
+  setup() {
+    return {};
+  },
 });
 </script>
-
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
