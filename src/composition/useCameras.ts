@@ -11,6 +11,7 @@ export default function useCameras(video: Ref<HTMLVideoElement | null>) {
   const accessDenied = ref<boolean>(false);
   const width = ref<number | undefined>(undefined);
   const height = ref<number | undefined>(undefined);
+  const frameRate = ref<number | undefined>(undefined);
   const done = ref<boolean>(false);
 
   function getDevices() {
@@ -41,6 +42,7 @@ export default function useCameras(video: Ref<HTMLVideoElement | null>) {
       const settings = stream.getVideoTracks()[0].getSettings();
       width.value = settings.width;
       height.value = settings.height;
+      frameRate.value = settings.frameRate;
       getDevices();
       if (video.value) {
         video.value.srcObject = stream;
@@ -66,5 +68,13 @@ export default function useCameras(video: Ref<HTMLVideoElement | null>) {
     }
   });
 
-  return { cameraList, selectedCamera, accessDenied, width, height, done };
+  return {
+    cameraList,
+    selectedCamera,
+    accessDenied,
+    width,
+    height,
+    frameRate,
+    done
+  };
 }
