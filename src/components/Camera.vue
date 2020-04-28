@@ -1,6 +1,7 @@
 <template>
   <div>
     <template v-if="!accessDenied">
+      <h1 v-if="!modelLoaded" class="z-20">Loading...</h1>
       <video
         ref="video"
         class="absolute inset-0 object-fill w-screen h-screen"
@@ -52,6 +53,8 @@
 import * as posenet from "@tensorflow-models/posenet";
 import { defineComponent, ref, watch } from "@vue/composition-api";
 import useCameras from "../composition/useCameras";
+import { Vector2D } from "@tensorflow-models/posenet/dist/types";
+import { isMobile } from "../utils/responsive";
 
 export default defineComponent({
   name: "Camera",
@@ -60,6 +63,7 @@ export default defineComponent({
     const canvas = ref<HTMLCanvasElement>(null);
     const net = ref<posenet.PoseNet>(null);
     const ctx = ref<CanvasRenderingContext2D>(null);
+    const modelLoaded = ref<boolean>(false);
 
     const {
       cameraList,
@@ -81,6 +85,13 @@ export default defineComponent({
       ctx.value.fillText(emoji, position.x - xOffset, position.y);
     }
 
+    function getRatio(posA: Vector2D, posB: Vector2D) {
+      const distance = Math.sqrt(
+        (posA.x - posB.x) ** 2 + (posA.y - posB.y) ** 2
+      );
+      return Math.round(distance);
+    }
+
     async function setupFrame() {
       if (!net.value || !ctx.value || !videoReady.value) return;
       const pose = await net.value.estimateSinglePose(
@@ -90,9 +101,20 @@ export default defineComponent({
         }
       );
       ctx.value.clearRect(0, 0, width.value || 0, height.value || 0);
-      drawEmoji("👃", pose.keypoints[0], 5);
-      drawEmoji("👁", pose.keypoints[1], 10);
-      drawEmoji("👁", pose.keypoints[2], 10);
+
+      // How big the emojis should be depending on the distance between eyes
+      const ratio = getRatio(
+        pose.keypoints[1].position,
+        pose.keypoints[2].position
+      );
+
+      ctx.value.font = `${ratio}px serif`;
+      ctx.value.textAlign = "center";
+      ctx.value.textBaseline = "middle";
+
+      drawEmoji("👃", pose.keypoints[0], ratio / 10);
+      drawEmoji("👁", pose.keypoints[1], ratio / 5);
+      drawEmoji("👁", pose.keypoints[2], ratio / 5);
       requestAnimationFrame(setupFrame);
     }
 
@@ -103,20 +125,17 @@ export default defineComponent({
       canvas.value.width = width.value || 0;
       canvas.value.height = height.value || 0;
       ctx.value = canvas.value.getContext("2d");
-      if (ctx.value) {
-        ctx.value.font = "50px serif";
-        ctx.value.textAlign = "center";
-        ctx.value.textBaseline = "middle";
-      }
+      const multiplier = isMobile() ? 0.5 : 0.75;
       net.value = await posenet.load({
         architecture: "MobileNetV1",
         outputStride: 16,
-        multiplier: 0.5,
+        multiplier,
         inputResolution: {
           width: video.value.width,
           height: video.value.height
         }
       });
+      modelLoaded.value = true;
       requestAnimationFrame(setupFrame);
     }
 
@@ -132,7 +151,8 @@ export default defineComponent({
       cameraList,
       selectedCamera,
       accessDenied,
-      errorMessage
+      errorMessage,
+      modelLoaded
     };
   }
 });
