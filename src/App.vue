@@ -1,21 +1,18 @@
 <template>
   <div id="app">
-    <h1
-      class="text-3xl font-semibold leading-9 text-center text-teal-400 font-display"
-    >
-      Emoji Camera
-    </h1>
+    <camera />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
+import Camera from "@/components/Camera.vue";
 
 export default defineComponent({
   name: "App",
-
+  components: { Camera },
   setup() {
     return {};
-  },
+  }
 });
 </script>
