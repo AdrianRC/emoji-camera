@@ -14,6 +14,7 @@ export default function useCameras(video: Ref<HTMLVideoElement | null>) {
   const height = ref<number | undefined>(undefined);
   const frameRate = ref<number | undefined>(undefined);
   const videoReady = ref<boolean>(false);
+  const lastStream = ref<MediaStream>(null);
 
   function getDevices() {
     navigator.mediaDevices
@@ -33,12 +34,16 @@ export default function useCameras(video: Ref<HTMLVideoElement | null>) {
 
   async function getMedia(camera?: Camera) {
     try {
+      if (lastStream.value) {
+        lastStream.value.getTracks().forEach(track => track.stop());
+      }
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: false,
         video: {
           deviceId: camera?.id
         }
       });
+      lastStream.value = stream;
       accessDenied.value = false;
       const settings = stream.getVideoTracks()[0].getSettings();
       width.value = settings.width;
