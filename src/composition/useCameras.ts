@@ -9,6 +9,7 @@ export default function useCameras(video: Ref<HTMLVideoElement | null>) {
   const selectedCamera = ref<Camera>(null);
   const cameraList = ref<Camera[]>([]);
   const accessDenied = ref<boolean>(false);
+  const errorMessage = ref<string>("");
   const width = ref<number | undefined>(undefined);
   const height = ref<number | undefined>(undefined);
   const frameRate = ref<number | undefined>(undefined);
@@ -55,6 +56,7 @@ export default function useCameras(video: Ref<HTMLVideoElement | null>) {
         selectedCamera.value = camera;
       }
     } catch (e) {
+      errorMessage.value = e;
       accessDenied.value = true;
     }
   }
@@ -77,6 +79,7 @@ export default function useCameras(video: Ref<HTMLVideoElement | null>) {
     width,
     height,
     frameRate,
-    videoReady
+    videoReady,
+    errorMessage
   };
 }

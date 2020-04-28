@@ -41,9 +41,10 @@
         </div>
       </div>
     </template>
-    <h1 v-else>
-      Access to the camera is needed for this app to function.
-    </h1>
+    <template v-else>
+      <h1>Access to the camera is needed for this app to function.</h1>
+      <p>Error message: {{ errorMessage }}</p>
+    </template>
   </div>
 </template>
 
@@ -64,6 +65,7 @@ export default defineComponent({
       cameraList,
       selectedCamera,
       accessDenied,
+      errorMessage,
       height,
       width,
       videoReady
@@ -129,7 +131,8 @@ export default defineComponent({
       canvas,
       cameraList,
       selectedCamera,
-      accessDenied
+      accessDenied,
+      errorMessage
     };
   }
 });
