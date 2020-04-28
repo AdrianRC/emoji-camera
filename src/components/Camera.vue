@@ -102,7 +102,8 @@ export default defineComponent({
       ctx.value = canvas.value.getContext("2d");
       net.value = await posenet.load({
         architecture: "MobileNetV1",
-        outputStride: 32,
+        outputStride: 16,
+        multiplier: 0.5,
         inputResolution: {
           width: video.value.width,
           height: video.value.height
