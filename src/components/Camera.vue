@@ -5,10 +5,12 @@
       <video
         ref="video"
         class="absolute inset-0 object-fill w-screen h-screen"
+        style="transform: rotateY(180deg)"
       ></video>
       <canvas
         ref="canvas"
         class="absolute inset-0 z-10 object-fill w-screen h-screen"
+        style="transform: rotateY(180deg)"
       ></canvas>
       <div class="absolute bottom-0 z-20 w-full mb-8 sm:mb-4">
         <div class="flex justify-center">
@@ -115,6 +117,11 @@ export default defineComponent({
       drawEmoji("👃", pose.keypoints[0], ratio / 10);
       drawEmoji("👁", pose.keypoints[1], ratio / 5);
       drawEmoji("👁", pose.keypoints[2], ratio / 5);
+
+      ctx.value.save();
+      ctx.value.scale(-1, 1);
+      ctx.value.translate(-(width.value || 0), 0);
+      ctx.value.restore();
       requestAnimationFrame(setupFrame);
     }
 
