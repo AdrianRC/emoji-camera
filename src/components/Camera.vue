@@ -88,9 +88,7 @@ export default defineComponent({
       ctx.value.fillText("👃", nosePos.x - 5, nosePos.y);
       ctx.value.fillText("👁", leftEyePos.x - 10, leftEyePos.y);
       ctx.value.fillText("👁", rightEyePos.x - 10, rightEyePos.y);
-      setTimeout(() => {
-        requestAnimationFrame(setupFrame);
-      }, 1000 / (frameRate.value || 30));
+      requestAnimationFrame(setupFrame);
     }
 
     async function setupModel() {
