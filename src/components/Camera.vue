@@ -66,12 +66,11 @@ export default defineComponent({
       accessDenied,
       height,
       width,
-      frameRate,
-      done: cameraReady
+      videoReady
     } = useCameras(video);
 
     async function setupFrame() {
-      if (!net.value || !ctx.value) return;
+      if (!net.value || !ctx.value || !videoReady.value) return;
       const pose = await net.value.estimateSinglePose(
         video.value as HTMLVideoElement,
         {
@@ -110,7 +109,7 @@ export default defineComponent({
       requestAnimationFrame(setupFrame);
     }
 
-    watch(cameraReady, isReady => {
+    watch(videoReady, isReady => {
       if (isReady) {
         setupModel();
       }

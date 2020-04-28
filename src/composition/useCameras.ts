@@ -12,7 +12,7 @@ export default function useCameras(video: Ref<HTMLVideoElement | null>) {
   const width = ref<number | undefined>(undefined);
   const height = ref<number | undefined>(undefined);
   const frameRate = ref<number | undefined>(undefined);
-  const done = ref<boolean>(false);
+  const videoReady = ref<boolean>(false);
 
   function getDevices() {
     navigator.mediaDevices
@@ -45,13 +45,15 @@ export default function useCameras(video: Ref<HTMLVideoElement | null>) {
       frameRate.value = settings.frameRate;
       getDevices();
       if (video.value) {
+        video.value.onloadeddata = () => {
+          videoReady.value = true;
+        };
         video.value.srcObject = stream;
         video.value.play();
       }
       if (camera) {
         selectedCamera.value = camera;
       }
-      done.value = true;
     } catch (e) {
       accessDenied.value = true;
     }
@@ -63,7 +65,7 @@ export default function useCameras(video: Ref<HTMLVideoElement | null>) {
 
   watch(selectedCamera, val => {
     if (val) {
-      done.value = false;
+      videoReady.value = false;
       getMedia(val);
     }
   });
@@ -75,6 +77,6 @@ export default function useCameras(video: Ref<HTMLVideoElement | null>) {
     width,
     height,
     frameRate,
-    done
+    videoReady
   };
 }
