@@ -78,16 +78,16 @@ export default defineComponent({
           flipHorizontal: false
         }
       );
-      ctx.value.clearRect(0, 0, width.value || 0, height.value || 0);
-      const nosePos = pose.keypoints[0].position;
-      const leftEyePos = pose.keypoints[1].position;
-      const rightEyePos = pose.keypoints[2].position;
-      ctx.value.font = "50px serif";
-      ctx.value.textAlign = "center";
-      ctx.value.textBaseline = "middle";
-      ctx.value.fillText("👃", nosePos.x - 5, nosePos.y);
-      ctx.value.fillText("👁", leftEyePos.x - 10, leftEyePos.y);
-      ctx.value.fillText("👁", rightEyePos.x - 10, rightEyePos.y);
+      // ctx.value.clearRect(0, 0, width.value || 0, height.value || 0);
+      // const nosePos = pose.keypoints[0].position;
+      // const leftEyePos = pose.keypoints[1].position;
+      // const rightEyePos = pose.keypoints[2].position;
+      // ctx.value.font = "50px serif";
+      // ctx.value.textAlign = "center";
+      // ctx.value.textBaseline = "middle";
+      // ctx.value.fillText("👃", nosePos.x - 5, nosePos.y);
+      // ctx.value.fillText("👁", leftEyePos.x - 10, leftEyePos.y);
+      // ctx.value.fillText("👁", rightEyePos.x - 10, rightEyePos.y);
       setTimeout(() => {
         requestAnimationFrame(setupFrame);
       }, 1000 / (frameRate.value || 30));
