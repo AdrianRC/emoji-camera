@@ -110,18 +110,19 @@ export default defineComponent({
         pose.keypoints[2].position
       );
 
-      ctx.value.font = `${ratio}px serif`;
+      ctx.value.font = `${ratio * 0.9}px serif`;
       ctx.value.textAlign = "center";
       ctx.value.textBaseline = "middle";
 
-      drawEmoji("👃", pose.keypoints[0], ratio / 10);
-      drawEmoji("👁", pose.keypoints[1], ratio / 5);
-      drawEmoji("👁", pose.keypoints[2], ratio / 5);
+      drawEmoji("👃", pose.keypoints[0], ratio / 12);
+      drawEmoji("👁", pose.keypoints[1], ratio / 7);
+      drawEmoji("👁", pose.keypoints[2], ratio / 7);
 
       ctx.value.save();
       ctx.value.scale(-1, 1);
       ctx.value.translate(-(width.value || 0), 0);
       ctx.value.restore();
+
       requestAnimationFrame(setupFrame);
     }
 
