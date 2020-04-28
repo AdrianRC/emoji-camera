@@ -10,7 +10,6 @@
       <canvas
         ref="canvas"
         class="absolute inset-0 z-10 object-fill w-screen h-screen"
-        style="transform: rotateY(180deg)"
       ></canvas>
       <div class="absolute bottom-0 z-20 w-full mb-8 sm:mb-4">
         <div class="flex justify-center">
@@ -99,7 +98,7 @@ export default defineComponent({
       const pose = await net.value.estimateSinglePose(
         video.value as HTMLVideoElement,
         {
-          flipHorizontal: false
+          flipHorizontal: true
         }
       );
       ctx.value.clearRect(0, 0, width.value || 0, height.value || 0);
