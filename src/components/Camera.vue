@@ -58,7 +58,7 @@ export default defineComponent({
     const video = ref<HTMLVideoElement>(null);
     const canvas = ref<HTMLCanvasElement>(null);
     const net = ref<posenet.PoseNet>(null);
-    const ctx = ref<CanvasRenderingContext2D | null>(null);
+    const ctx = ref<CanvasRenderingContext2D>(null);
 
     const {
       cameraList,
@@ -69,6 +69,16 @@ export default defineComponent({
       videoReady
     } = useCameras(video);
 
+    function drawEmoji(
+      emoji: string,
+      keypoint: posenet.Keypoint,
+      xOffset: number
+    ) {
+      const { position, score } = keypoint;
+      if (!ctx.value || score < 0.6) return;
+      ctx.value.fillText(emoji, position.x - xOffset, position.y);
+    }
+
     async function setupFrame() {
       if (!net.value || !ctx.value || !videoReady.value) return;
       const pose = await net.value.estimateSinglePose(
@@ -78,15 +88,9 @@ export default defineComponent({
         }
       );
       ctx.value.clearRect(0, 0, width.value || 0, height.value || 0);
-      const nosePos = pose.keypoints[0].position;
-      const leftEyePos = pose.keypoints[1].position;
-      const rightEyePos = pose.keypoints[2].position;
-      ctx.value.font = "50px serif";
-      ctx.value.textAlign = "center";
-      ctx.value.textBaseline = "middle";
-      ctx.value.fillText("👃", nosePos.x - 5, nosePos.y);
-      ctx.value.fillText("👁", leftEyePos.x - 10, leftEyePos.y);
-      ctx.value.fillText("👁", rightEyePos.x - 10, rightEyePos.y);
+      drawEmoji("👃", pose.keypoints[0], 5);
+      drawEmoji("👁", pose.keypoints[1], 10);
+      drawEmoji("👁", pose.keypoints[2], 10);
       requestAnimationFrame(setupFrame);
     }
 
@@ -97,6 +101,11 @@ export default defineComponent({
       canvas.value.width = width.value || 0;
       canvas.value.height = height.value || 0;
       ctx.value = canvas.value.getContext("2d");
+      if (ctx.value) {
+        ctx.value.font = "50px serif";
+        ctx.value.textAlign = "center";
+        ctx.value.textBaseline = "middle";
+      }
       net.value = await posenet.load({
         architecture: "MobileNetV1",
         outputStride: 16,
